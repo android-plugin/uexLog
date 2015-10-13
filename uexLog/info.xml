@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexLog" version="3.0.0" build="0">
-        <info>0:Log功能插件</info>
+        uexName="uexLog" version="3.0.1" build="1">
+        <info>1:国际化</info>
+        <build>0:Log功能插件</build>
     </plugin>
 </uexplugins>
