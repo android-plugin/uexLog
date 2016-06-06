@@ -1,5 +1,13 @@
 package org.zywx.wbpalmstar.plugin.uexlog;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import org.zywx.wbpalmstar.base.ResoureFinder;
+import org.zywx.wbpalmstar.engine.EBrowserView;
+import org.zywx.wbpalmstar.engine.universalex.EUExBase;
+import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,13 +17,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
-import org.zywx.wbpalmstar.base.ResoureFinder;
-import org.zywx.wbpalmstar.engine.EBrowserView;
-import org.zywx.wbpalmstar.engine.universalex.EUExBase;
-
-import android.content.Context;
-import android.widget.Toast;
 
 public class EUExLog extends EUExBase {
 
@@ -41,7 +42,9 @@ public class EUExLog extends EUExBase {
 		String widgetPath = null;
 		if (mBrwView.getCurrentWidget() != null) {
 			widgetPath = mBrwView.getCurrentWidget().m_widgetPath;
-		}
+		}else{
+            widgetPath= WDataManager.sRootWgt.m_widgetPath;
+        }
 		if (widgetPath != null) {
 			File file = new File(widgetPath + F_FILE_NAME);
 			if (!file.exists()) {
@@ -76,7 +79,11 @@ public class EUExLog extends EUExBase {
 			if (m_udp == null) {
 				m_udp = new DatagramSocket();
 				m_udp.setBroadcast(true);
-				m_logServerIp = mBrwView.getCurrentWidget().m_logServerIp;
+                if (mBrwView.getCurrentWidget()!=null) {
+                    m_logServerIp = mBrwView.getCurrentWidget().m_logServerIp;
+                }else{
+                    m_logServerIp=WDataManager.sRootWgt.m_logServerIp;
+                }
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

@@ -19,16 +19,25 @@
 
 apply plugin: 'com.android.application'
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile(name: "Engine-system-debug", ext: 'aar')
 }
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "23.0.0"
     defaultConfig {
         // 应用的包名
         applicationId "org.zywx.wbpalmstar.widgetone.uexLog"
+        minSdkVersion 14
     }
     sourceSets {
         main {
@@ -39,7 +48,7 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs=['libs']
+            jniLibs.srcDirs = ['libs']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -53,6 +62,8 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    productFlavors {
     }
 }
 
