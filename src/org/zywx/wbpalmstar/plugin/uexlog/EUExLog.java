@@ -1,8 +1,6 @@
 package org.zywx.wbpalmstar.plugin.uexlog;
 
 import android.content.Context;
-import android.widget.Toast;
-import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
@@ -11,7 +9,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 public class EUExLog extends EUExBase {
 
@@ -93,28 +94,30 @@ public class EUExLog extends EUExBase {
         if (m_udp == null || inLog == null || inLog.length() == 0) {
             return;
         }
+        sendLogOnThread(inLog);
+    }
 
-        byte[] data = inLog.getBytes();
-        InetAddress inetAddress;
-        try {
-            inetAddress = InetAddress.getByName(m_logServerIp);
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length,
-                    inetAddress, logServerPort);
-            m_udp.send(sendPacket);
-        } catch (UnknownHostException e) {
-            closeUDP();
-            e.printStackTrace();
-        } catch (IOException e) {
-            closeUDP();
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            Toast.makeText(
-                    m_context,
-                    ResoureFinder.getInstance().getString(mContext,
-                            "plugin_log_error_no_permisson_INTERNET"),
-                    Toast.LENGTH_SHORT).show();
-        }
+    private void sendLogOnThread(final String inLog){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] data = inLog.getBytes();
+                InetAddress inetAddress;
+                try {
+                    inetAddress = InetAddress.getByName(m_logServerIp);
+                    DatagramPacket sendPacket = new DatagramPacket(data, data.length,
+                            inetAddress, logServerPort);
+                    m_udp.send(sendPacket);
+                } catch (IOException e) {
+                    closeUDP();
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    closeUDP();
+                    e.printStackTrace();
+                }
 
+            }
+        }).start();
     }
 
     private void closeUDP() {

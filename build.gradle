@@ -51,6 +51,7 @@ android {
         // 应用的包名
         applicationId "org.zywx.wbpalmstar.widgetone.uexLog"
         minSdkVersion 14
+        multiDexEnabled true
     }
     sourceSets {
         main {

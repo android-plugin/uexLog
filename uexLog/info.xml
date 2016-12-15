@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-            uexName="uexLog" version="4.0.0" build="2">
-        <info>2:支持后台插件</info>
-        <build>1:国际化</build>
+            uexName="uexLog" version="4.0.1" build="1">
+        <info>1:修复不能发送UDP的问题</info>
         <build>0:Log功能插件</build>
     </plugin>
 </uexplugins>
