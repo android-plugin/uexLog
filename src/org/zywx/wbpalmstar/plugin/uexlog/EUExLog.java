@@ -1,6 +1,7 @@
 package org.zywx.wbpalmstar.plugin.uexlog;
 
 import android.content.Context;
+import org.zywx.wbpalmstar.base.BDebug;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
 import org.zywx.wbpalmstar.widgetone.dataservice.WDataManager;
@@ -13,6 +14,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EUExLog extends EUExBase {
 
@@ -27,6 +30,8 @@ public class EUExLog extends EUExBase {
     private DatagramSocket m_udp;
 
     private Context m_context;
+
+    private ExecutorService mExecutorService;
 
     public EUExLog(Context context, EBrowserView inParent) {
         super(context, inParent);
@@ -98,12 +103,18 @@ public class EUExLog extends EUExBase {
     }
 
     private void sendLogOnThread(final String inLog){
-        new Thread(new Runnable() {
+        if (mExecutorService==null){
+            mExecutorService= Executors.newSingleThreadExecutor();
+        }
+        mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
                 byte[] data = inLog.getBytes();
                 InetAddress inetAddress;
                 try {
+                    if (m_udp==null){
+                        return;
+                    }
                     inetAddress = InetAddress.getByName(m_logServerIp);
                     DatagramPacket sendPacket = new DatagramPacket(data, data.length,
                             inetAddress, logServerPort);
@@ -117,7 +128,7 @@ public class EUExLog extends EUExBase {
                 }
 
             }
-        }).start();
+        });
     }
 
     private void closeUDP() {
@@ -127,9 +138,17 @@ public class EUExLog extends EUExBase {
         }
     }
 
+    private void shutdownService(){
+        if (mExecutorService!=null){
+            mExecutorService.shutdownNow();
+            mExecutorService=null;
+        }
+    }
+
     @Override
     protected boolean clean() {
         closeUDP();
+        shutdownService();
         return true;
     }
 }

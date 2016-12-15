@@ -7,7 +7,11 @@ if (UNIT_TEST) {
 
     var uexLogCase = {
         "sendLog": function () {
-            uexLog.sendLog("-----------------log-----------------");
+
+            for (var i=0;i<100;i++){
+                uexLog.sendLog("-----------------log-"+i+"-----------------");
+            }
+
             UNIT_TEST.assert(true);
         }
     };
