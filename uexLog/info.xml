@@ -2,7 +2,7 @@
 <uexplugins>
     <plugin
             uexName="uexLog" version="4.0.1" build="1">
-        <info>1:修复不能发送UDP的问题</info>
+        <info>1:修复不能发送Log的问题</info>
         <build>0:Log功能插件</build>
     </plugin>
 </uexplugins>
